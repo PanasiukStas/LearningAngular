@@ -1,0 +1,15 @@
+<div class="courses-container">
+    <h2>Пошук курсів</h2>
+
+    <input type="text" [formControl]="searchControl" placeholder="Введіть назву курсу...">
+
+    <ul *ngIf="courses$ | async as courses">
+        <li *ngFor="let course of courses">
+            <div class="course-info">
+                <strong>{{ course.title }}</strong>
+                <span>{{ course.category }}</span>
+            </div>
+            <small>⏱ {{ course.duration }}</small>
+        </li>
+    </ul>
+</div>
