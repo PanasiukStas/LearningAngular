@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 
-export interface Course {
+export interface CourseItem {
   id: number;
   title: string;
   category: string;
@@ -13,18 +13,21 @@ export interface Course {
   providedIn: 'root'
 })
 export class CourseService {
-  private courses: Course[] = [
-    { id: 1, title: 'Angular Basics', category: 'Frontend', duration: '5 годин' },
-    { id: 2, title: 'RxJS Masterclass', category: 'Frontend', duration: '3 години' },
-    { id: 3, title: 'Node.js Backend', category: 'Backend', duration: '8 годин' },
-    { id: 4, title: 'PostgreSQL for Beginners', category: 'Database', duration: '4 години' },
-    { id: 5, title: 'Kotlin Android Dev', category: 'Mobile', duration: '10 годин' }
+  private mockCourses: CourseItem[] = [
+    { id: 101, title: 'Вступ до Python', category: 'Data Science', duration: '4 тижні' },
+    { id: 102, title: 'Основи UI/UX дизайну', category: 'Design', duration: '2 тижні' },
+    { id: 103, title: 'Просунутий TypeScript', category: 'Web Dev', duration: '15 годин' },
+    { id: 104, title: 'DevOps з нуля до Pro', category: 'DevOps', duration: '6 тижнів' },
+    { id: 105, title: 'React та Redux', category: 'Web Dev', duration: '20 годин' }
   ];
 
-  searchCourses(query: string): Observable<Course[]> {
-    const filtered = this.courses.filter(c =>
-      c.title.toLowerCase().includes(query.toLowerCase())
+  fetchCoursesByTitle(searchText: string): Observable<CourseItem[]> {
+    const term = searchText.trim().toLowerCase();
+
+    const searchResult = this.mockCourses.filter(course =>
+      course.title.toLowerCase().includes(term)
     );
-    return of(filtered).pipe(delay(300));
+
+    return of(searchResult).pipe(delay(400));
   }
 }

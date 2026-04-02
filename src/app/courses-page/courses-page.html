@@ -1,15 +1,23 @@
-<div class="courses-container">
-    <h2>Пошук курсів</h2>
+<section class="page-wrapper">
+    <h1 class="page-title">Каталог навчальних курсів</h1>
 
-    <input type="text" [formControl]="searchControl" placeholder="Введіть назву курсу...">
+    <div class="search-box">
+        <input type="text" [formControl]="searchInput" placeholder="Який курс ви шукаєте?" class="search-input">
+    </div>
 
-    <ul *ngIf="courses$ | async as courses">
-        <li *ngFor="let course of courses">
-            <div class="course-info">
-                <strong>{{ course.title }}</strong>
-                <span>{{ course.category }}</span>
+    <div class="courses-grid" *ngIf="coursesList$ | async as courses">
+
+        <div class="no-results" *ngIf="courses.length === 0">
+            За вашим запитом курсів не знайдено.
+        </div>
+
+        <div class="course-card" *ngFor="let item of courses">
+            <div class="card-header">
+                <span class="badge">{{ item.category }}</span>
+                <span class="time-label">{{ item.duration }}</span>
             </div>
-            <small>⏱ {{ course.duration }}</small>
-        </li>
-    </ul>
-</div>
+            <h3 class="course-name">{{ item.title }}</h3>
+        </div>
+
+    </div>
+</section>

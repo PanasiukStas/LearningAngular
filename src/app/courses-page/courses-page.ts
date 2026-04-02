@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, startWith, map } from 'rxjs/operators';
-import { CourseService, Course } from './course';
+import { CourseService, CourseItem } from './course';
 
 @Component({
   selector: 'app-courses-page',
@@ -13,18 +13,19 @@ import { CourseService, Course } from './course';
   styleUrls: ['./courses-page.css']
 })
 export class CoursesPage implements OnInit {
-  searchControl = new FormControl('');
-  courses$!: Observable<Course[]>;
+  searchInput = new FormControl('', { nonNullable: true });
 
-  constructor(private courseService: CourseService) { }
+  coursesList$!: Observable<CourseItem[]>;
+
+  constructor(private apiService: CourseService) { }
 
   ngOnInit(): void {
-    this.courses$ = this.searchControl.valueChanges.pipe(
+    this.coursesList$ = this.searchInput.valueChanges.pipe(
       startWith(''),
-      map(query => query ? query.trim() : ''),
-      debounceTime(400),
+      map(value => value.trim()),
+      debounceTime(350),
       distinctUntilChanged(),
-      switchMap(query => this.courseService.searchCourses(query || ''))
+      switchMap(query => this.apiService.fetchCoursesByTitle(query))
     );
   }
 }
