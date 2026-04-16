@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap, startWith, map } from 'rxjs/operators';
+import { Observable, combineLatest } from 'rxjs';
+import { debounceTime, distinctUntilChanged, startWith, map } from 'rxjs/operators';
 import { CourseService, CourseItem } from './course';
 
 @Component({
@@ -14,6 +14,7 @@ import { CourseService, CourseItem } from './course';
 })
 export class CoursesPage implements OnInit {
   searchInput = new FormControl('', { nonNullable: true });
+  categoryFilter = new FormControl('', { nonNullable: true });
 
   courseForm = new FormGroup({
     title: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
@@ -22,16 +23,32 @@ export class CoursesPage implements OnInit {
   });
 
   coursesList$!: Observable<CourseItem[]>;
+  categories$!: Observable<string[]>;
 
   constructor(private apiService: CourseService) { }
 
   ngOnInit(): void {
-    this.coursesList$ = this.searchInput.valueChanges.pipe(
+    this.categories$ = this.apiService.getCategories$();
+
+    const search$ = this.searchInput.valueChanges.pipe(
       startWith(''),
-      map(value => value.trim()),
       debounceTime(350),
       distinctUntilChanged(),
-      switchMap(query => this.apiService.fetchCoursesByTitle(query))
+      map(value => value.trim().toLowerCase())
+    );
+
+    const category$ = this.categoryFilter.valueChanges.pipe(
+      startWith('')
+    );
+
+    this.coursesList$ = combineLatest([search$, category$, this.apiService.getCourses$()]).pipe(
+      map(([searchTerm, selectedCategory, courses]) =>
+        courses.filter(course => {
+          const matchesTitle = course.title.toLowerCase().includes(searchTerm);
+          const matchesCategory = selectedCategory === '' || course.category === selectedCategory;
+          return matchesTitle && matchesCategory;
+        })
+      )
     );
   }
 
