@@ -23,12 +23,88 @@
     border-radius: 10px;
     outline: none;
     transition: border-color 0.2s;
+    box-sizing: border-box;
 }
 
 .search-input:focus {
     border-color: #4299e1;
 }
 
+/* Add course section */
+.add-course-section {
+    background: #f7fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 2rem;
+}
+
+.section-title {
+    font-size: 20px;
+    color: #2c3e50;
+    margin: 0 0 16px 0;
+}
+
+.course-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-label {
+    font-size: 13px;
+    font-weight: bold;
+    color: #4a5568;
+}
+
+.form-input {
+    padding: 10px 14px;
+    font-size: 14px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.form-input:focus {
+    border-color: #4299e1;
+}
+
+.btn-add {
+    align-self: flex-start;
+    padding: 10px 24px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #ffffff;
+    background: #4299e1;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-add:hover {
+    background: #3182ce;
+}
+
+.btn-add:disabled {
+    background: #a0aec0;
+    cursor: not-allowed;
+}
+
+/* Courses grid */
 .courses-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -42,6 +118,8 @@
     padding: 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
 }
 
 .course-card:hover {
@@ -71,10 +149,29 @@
 }
 
 .course-name {
-    margin: 0;
+    margin: 0 0 16px 0;
     color: #1a202c;
     font-size: 18px;
     line-height: 1.4;
+    flex-grow: 1;
+}
+
+.btn-delete {
+    align-self: flex-start;
+    padding: 6px 16px;
+    font-size: 13px;
+    font-weight: bold;
+    color: #e53e3e;
+    background: #fff5f5;
+    border: 1px solid #fed7d7;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.btn-delete:hover {
+    background: #e53e3e;
+    color: #ffffff;
 }
 
 .no-results {

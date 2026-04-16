@@ -5,6 +5,30 @@
         <input type="text" [formControl]="searchInput" placeholder="Який курс ви шукаєте?" class="search-input">
     </div>
 
+    <div class="add-course-section">
+        <h2 class="section-title">Додати новий курс</h2>
+        <form [formGroup]="courseForm" (ngSubmit)="onAddCourse()" class="course-form">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="title" class="form-label">Назва курсу</label>
+                    <input id="title" type="text" formControlName="title"
+                        placeholder="Наприклад: Angular для початківців" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label for="category" class="form-label">Категорія</label>
+                    <input id="category" type="text" formControlName="category" placeholder="Наприклад: Web Dev"
+                        class="form-input">
+                </div>
+                <div class="form-group">
+                    <label for="duration" class="form-label">Тривалість</label>
+                    <input id="duration" type="text" formControlName="duration" placeholder="Наприклад: 10 годин"
+                        class="form-input">
+                </div>
+            </div>
+            <button type="submit" class="btn-add" [disabled]="courseForm.invalid">Додати курс</button>
+        </form>
+    </div>
+
     <div class="courses-grid" *ngIf="coursesList$ | async as courses">
 
         <div class="no-results" *ngIf="courses.length === 0">
@@ -17,6 +41,7 @@
                 <span class="time-label">{{ item.duration }}</span>
             </div>
             <h3 class="course-name">{{ item.title }}</h3>
+            <button class="btn-delete" (click)="onDeleteCourse(item.id)">Видалити</button>
         </div>
 
     </div>

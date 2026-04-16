@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 export interface CourseItem {
   id: number;
@@ -13,21 +13,41 @@ export interface CourseItem {
   providedIn: 'root'
 })
 export class CourseService {
-  private mockCourses: CourseItem[] = [
+  private coursesSubject = new BehaviorSubject<CourseItem[]>([
     { id: 101, title: 'Вступ до Python', category: 'Data Science', duration: '4 тижні' },
     { id: 102, title: 'Основи UI/UX дизайну', category: 'Design', duration: '2 тижні' },
     { id: 103, title: 'Просунутий TypeScript', category: 'Web Dev', duration: '15 годин' },
     { id: 104, title: 'DevOps з нуля до Pro', category: 'DevOps', duration: '6 тижнів' },
     { id: 105, title: 'React та Redux', category: 'Web Dev', duration: '20 годин' }
-  ];
+  ]);
+
+  getCourses$(): Observable<CourseItem[]> {
+    return this.coursesSubject.asObservable();
+  }
 
   fetchCoursesByTitle(searchText: string): Observable<CourseItem[]> {
     const term = searchText.trim().toLowerCase();
 
-    const searchResult = this.mockCourses.filter(course =>
-      course.title.toLowerCase().includes(term)
+    return this.coursesSubject.asObservable().pipe(
+      map(courses =>
+        courses.filter(course =>
+          course.title.toLowerCase().includes(term)
+        )
+      )
     );
+  }
 
-    return of(searchResult).pipe(delay(400));
+  addCourse(course: Omit<CourseItem, 'id'>): void {
+    const currentCourses = this.coursesSubject.getValue();
+    const maxId = currentCourses.length > 0
+      ? Math.max(...currentCourses.map(c => c.id))
+      : 100;
+    const newCourse: CourseItem = { id: maxId + 1, ...course };
+    this.coursesSubject.next([...currentCourses, newCourse]);
+  }
+
+  deleteCourse(id: number): void {
+    const currentCourses = this.coursesSubject.getValue();
+    this.coursesSubject.next(currentCourses.filter(c => c.id !== id));
   }
 }
