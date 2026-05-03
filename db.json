@@ -1,0 +1,9 @@
+{
+  "courses": [
+    { "id": 1, "title": "Вступ до Angular", "category": "Frontend", "duration": 20 },
+    { "id": 2, "title": "Основи RxJS", "category": "Frontend", "duration": 16 },
+    { "id": 3, "title": "TypeScript для профі", "category": "Programming", "duration": 18 },
+    { "id": 4, "title": "Введення в Node.js", "category": "Backend", "duration": 22 },
+    { "id": 5, "title": "REST API з нуля", "category": "Backend", "duration": 14 }
+  ]
+}
